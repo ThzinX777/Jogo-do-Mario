@@ -1,35 +1,92 @@
-// Selecionando os elementos necessários
 const mario = document.querySelector('.mario');
 const pipe = document.querySelector('.pipe');
+const cloud = document.querySelector('.cloud');
 
-// Função para o Mario pular
+const gameOver = document.querySelector('.game-over');
+const restartButton = document.querySelector('.restart');
+
 const jump = () => {
+
     mario.classList.add('jump');
 
     setTimeout(() => {
-        mario.classList.remove('jump');
-    }, 500);
-};
 
-// Loop para verificar colisão e parar o jogo
+        mario.classList.remove('jump');
+
+    }, 500);
+}
+
 const loop = setInterval(() => {
+
     const pipePosition = pipe.offsetLeft;
     const marioPosition = +window.getComputedStyle(mario).bottom.replace('px', '');
+    const cloudPosition = +window.getComputedStyle(cloud).left.replace('px', '');
 
-    if (pipePosition < 120 && pipePosition > 0 && marioPosition < 80) {
+    if (pipePosition <= 100 && pipePosition > 0 && marioPosition < 60) {
+
         pipe.style.animation = 'none';
         pipe.style.left = `${pipePosition}px`;
 
         mario.style.animation = 'none';
         mario.style.bottom = `${marioPosition}px`;
 
-        mario.src = './img/gameover.png';
-        mario.style.width = '75px';o
-        mario.style.marginLeft = '50px';
+        mario.src = 'assets/imgs/game-over.png';
+        mario.style.width = '70px';
+        mario.style.marginLeft = '35px';
 
-        clearInterval(loop); // Parando o loop
+        cloud.style.animation = 'cloud 20s infinite linear';
+        cloud.style.left = `${cloudPosition}px`;
+
+        gameOver.style.visibility = 'visible';
+
+        clearInterval(loop);
     }
 }, 10);
 
-// Adicionando o evento de teclado
+const restart = () => {
+
+    gameOver.style.visibility = 'hidden';
+
+    pipe.style.animation = 'pipe-animations 1.5s infinite linear';
+    pipe.style.left = ``;
+
+    mario.src = 'assets/imgs/mario.gif';
+    mario.style.width = '130px';
+    mario.style.bottom = '0px';
+    mario.style.marginLeft = '';
+    mario.style.animation = '';
+
+    cloud.style.left = ``;
+
+    const loop = setInterval(() => {
+
+        const pipePosition = pipe.offsetLeft;
+        const marioPosition = +window.getComputedStyle(mario).bottom.replace('px', '');
+        const cloudPosition = +window.getComputedStyle(cloud).left.replace('px', '');
+    
+        if (pipePosition <= 100 && pipePosition > 0 && marioPosition < 60) {
+    
+            pipe.style.animation = 'none';
+            pipe.style.left = `${pipePosition}px`;
+    
+            mario.style.animation = 'none';
+            mario.style.bottom = `${marioPosition}px`;
+    
+            mario.src = 'assets/imgs/game-over.png';
+            mario.style.width = '70px';
+            mario.style.marginLeft = '35px';
+    
+            cloud.style.animation = 'cloud 20s infinite linear';
+            cloud.style.left = `${cloudPosition}px`;
+    
+            gameOver.style.visibility = 'visible';
+    
+            clearInterval(loop);
+        }
+    }, 10);
+}
+
 document.addEventListener('keydown', jump);
+document.addEventListener('touchstart', jump);
+
+restartButton.addEventListener('click', restart);
